@@ -1124,6 +1124,7 @@ contains
 !!
 !-----------------------------------------------------------------------------
   real(dp) function get_upcoming_manoeuvre_change_epoch(this, mjd)
+            ! DLA: check this
 
     class(Manoeuvres_class) :: this
     real(dp), intent(in)    :: mjd                                              ! current MJD

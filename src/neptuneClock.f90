@@ -386,6 +386,8 @@ contains
 
         !** step size / output write counter
         !-------------------------------------------------------
+        ! step_size must be negative for backwards propagation
+
         if(neptune%output%get_output_switch()) then
             if (this%intermediate_steps_flag) then
                 ! First step for intermediate steps is defined by the user
@@ -395,6 +397,8 @@ contains
             else
                 this%step_size = dble(neptune%get_output_step()) ! in seconds
             end if
+
+            if (.not.this%forward .and. (this%step_size > 0)) this%step_size = - this%step_size
 
             this%flag_output_step = .true.
             this%out_counter = this%start_time + this%step_size
@@ -408,9 +412,10 @@ contains
                     this%step_size   = dble(neptune%getStep())
                 end if
                 this%out_counter = this%start_time + this%step_size
+                if (.not.this%forward .and. (this%step_size > 0)) this%step_size = - this%step_size
                 this%flag_output_step = .true.
             else
-                this%step_size   = abs(this%end_time - this%start_time)
+                this%step_size   = this%end_time - this%start_time
                 this%out_counter = this%end_time
             end if
         end if
@@ -418,6 +423,8 @@ contains
         !** set covariance step counter
         !-----------------------------------------------------
         this%cov_step = neptune%numerical_integrator%getCovarianceIntegrationStep()
+        if (.not.this%forward .and. (this%cov_step > 0)) this%cov_step = - this%cov_step
+
         call neptune%numerical_integrator%setCovarianceIntegrationStep(this%cov_step)
         this%cov_propagation_flag = neptune%numerical_integrator%getCovariancePropagationFlag()
 
@@ -430,11 +437,7 @@ contains
         end if
 
         if(this%cov_propagation_flag) then
-            if(this%forward) then
-                this%cov_counter  = this%start_time + cov_step
-            else
-                this%cov_counter  = this%start_time - cov_step
-            end if
+            this%cov_counter  = this%start_time + cov_step
         else
             this%cov_counter = this%end_time
         end if

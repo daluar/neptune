@@ -50,12 +50,17 @@ program valsent
     call reduction_model%initEop('data')
     neptune_instance = Neptune_class()
 
+    read(*,*)
+
     !===================================
     !
     ! Read input file
     !
     !---------------------------------
     call rdinp(neptune_instance, runid, epoch)
+
+    write(*, *) epoch(:)%mjd
+    write(42, *) epoch(:)%mjd
 
     !============================================================
     !
@@ -96,8 +101,11 @@ program valsent
 
     init_flag = .true.
 
-    epoch(1) = sentState(1)%epoch
-    epoch(2) = sentState(ndata)%epoch
+    ! epoch(1) = sentState(1)%epoch
+    ! epoch(2) = sentState(ndata)%epoch
+
+    write(*, *) epoch(:)%mjd
+    write(42, *) epoch(:)%mjd
 
     write(*,*) "Starting NEPTUNE..."
     call propagate(neptune_instance,state_in, dummy1, epoch, state_out, dummy2, init_flag)

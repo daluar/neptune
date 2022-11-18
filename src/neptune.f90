@@ -707,6 +707,8 @@ contains
     else
       flag_backward = .false.
     end if
+    write(*,*) "flag_backward: ", flag_backward
+    write(42,*) "flag_backward: ", flag_backward
 
     !============================================================
     !
@@ -885,9 +887,10 @@ contains
       ! Integration of position, velocity and state error transition matrix
       !
       !--------------------------------------------------------------------------------
-      do
+      LOOP_INTEGRATION: do
 
         if (neptune%derivatives_model%getPertSwitch(PERT_MANEUVERS)) then
+          ! DLA: check this
           if (upcoming_maneuver_epoch_mjd > 0.d0) then
             ! Reset when the timestep of the integrator is greater than
             if (.not. flag_backward .and. (manoeuvre_change_counter < (prop_counter + neptune%numerical_integrator%get_current_step_size()) .and. manoeuvre_change_counter > prop_counter) &
@@ -933,6 +936,7 @@ contains
         if(neptune%has_to_write_progress()) then
             dtmp = abs(prop_counter - start_epoch_sec)/abs(end_epoch_sec - start_epoch_sec)
             call write_progress(neptune%get_progress_file_name(), dtmp, neptune%get_progress_step())
+            write(*,*) "progress", dtmp
         end if
 
         if(hasFailed()) then
@@ -961,6 +965,7 @@ contains
               prop_counter = lastPropCounter
             else if ((.not. flag_backward .and. (prop_counter > request_time)) .or. &
                     (       flag_backward .and. (prop_counter < request_time))) then
+              ! DLA: check this
               ! This case may happen when the integrator oversteps the requested time
               !  and usually would start interpolation. Though, due to integration issues
               !  he never gets to the point of interpolation but sets the prop_counter anyway.
@@ -989,7 +994,7 @@ contains
         end if
         ! =================
 
-      end do
+      end do LOOP_INTEGRATION
       !---------------------------------------------------------------------------------------------------------
 
       nresets = 0   ! reset the counter as step was successful
