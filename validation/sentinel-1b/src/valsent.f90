@@ -136,7 +136,7 @@ program valsent
             sent_state = sentState(i+1)
         end if
 
-        ! write(*,*) state_out%epoch%mjd, sent_state%epoch%mjd
+        write(*,*) "i=", i, ", nept=", state_out%epoch%mjd, ", sent=", sent_state%epoch%mjd
 
         if(abs(state_out%epoch%mjd - sent_state%epoch%mjd) > 1.d-6) then
             write(*,*) "something wrong with the epochs...."

@@ -755,6 +755,7 @@ contains
       acc_man = 0.d0
     end if
 
+
 !if((time_mjd - 55276.75001d0) < eps15) then
 ! write(*,*) "+++ Date: ", time_mjd, " +++"
 ! write(*,*) "accgrav = ", acc_gravity, mag(acc_gravity)
@@ -780,7 +781,8 @@ contains
       return
     end if
 
-    !write(*,*) "acc  = ", acc
+    write(42,*) "accel: mjd=", time_mjd, " acc=", acc, " acc_man=", acc_man, " pert active=", this%neptunePerturbations(PERT_MANEUVERS)%switch
+    !write(*,*) "acc  = ", acc    
     !read(*,*)
     !** done!
     if(isControlled()) then

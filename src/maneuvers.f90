@@ -602,7 +602,14 @@ contains
     k = 1
     do i=1,size(this%manv)
 
+
       do j=1,this%manv(i)%nphases
+        write(45,*) "NEPT - i=", i, " k=", j
+        write(45,*) "NEPT - neptune_maneuvers(i)%phase(j)%mjd_start         = ", this%manv(i)%phase(j)%mjd_start
+        write(45,*) "NEPT - neptune_maneuvers(i)%phase(j)%mjd_end           = ", this%manv(i)%phase(j)%mjd_end
+        write(45,*) "NEPT - neptune_maneuvers(i)%phase(j)%acc               = ", this%manv(i)%phase(j)%acc(:)
+        write(45,*) "NEPT - neptune_maneuvers(i)%phase(j)%thrust_efficiency = ", this%manv(i)%phase(j)%thrust_efficiency
+
         this%mnv_sequence(k)%midx        = i
         this%mnv_sequence(k)%pidx        = j
         this%mnv_sequence(k)%mjd_start   = this%manv(i)%phase(j)%mjd_start
@@ -1109,7 +1116,7 @@ contains
 
   end function get_current_index
 
-!=============================================================================
+  !=============================================================================
 !
 !> @anchor      get_upcoming_manoeuvre_change_epoch
 !!

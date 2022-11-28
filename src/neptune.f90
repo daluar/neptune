@@ -460,7 +460,7 @@ contains
       type(Neptune_class)        ,intent(inout)  :: neptune
       type(state_t),              intent(in)      :: state_in
       type(covariance_t),         intent(in)      :: covar_in
-      type(time_t), dimension(2), intent(in)      :: epoch
+      type(time_t), dimension(:), intent(in)      :: epoch
       logical,                    intent(in)      :: flag_reset
 
       type(state_t),              intent(out)     :: state_out
@@ -857,8 +857,14 @@ contains
 
         ! Get the next manoeuvre change epoch
         upcoming_maneuver_epoch_mjd = neptune%manoeuvres_model%get_upcoming_manoeuvre_change_epoch(epochs(1)%mjd + prop_counter/86400.d0, using_backwards_propagation=flag_backward)
+        write(45,*) "###############"
+        write(45,*) "upcoming_maneuver_epoch_mjd=", upcoming_maneuver_epoch_mjd
         if (upcoming_maneuver_epoch_mjd > 0.d0) then
           manoeuvre_change_counter = (upcoming_maneuver_epoch_mjd - epochs(1)%mjd) * 86400.d0
+          write(45,*) "flag_backward           =", flag_backward
+          write(45,*) "request_time            =", request_time
+          write(45,*) "prop_counter            =", prop_counter
+          write(45,*) "manoeuvre_change_counter=", manoeuvre_change_counter
           !call message(' New maneuver change at: '//toString(epochs(1)%mjd + manoeuvre_change_counter/86400.d0)//' ('//toString(manoeuvre_change_counter)//')', LOG_AND_STDOUT)
           ! Check whether the manoeuvre change is more immenent than the step proposed
           if (.not. flag_backward .and. (manoeuvre_change_counter < request_time .and. manoeuvre_change_counter > prop_counter) &

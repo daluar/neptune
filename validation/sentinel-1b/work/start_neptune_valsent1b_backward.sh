@@ -8,6 +8,7 @@ if [[ ! -d "data" ]]; then
 fi
 #
 ln -sf ../../../bin/neptune-valsent1b
+ln -sf ../../../bin/neptune-valsent1b-set
 #
 # Download solar and geomagnetic activity data, when the files are older than 1 day
 if [[ `find "data/fap_day.dat" -mtime +24` ]]; then
@@ -44,5 +45,8 @@ if [[ -f "input/valsent.inp" ]]; then
 fi
 cp -v "input/valsent_backward.inp" "input/valsent.inp"
 cat "input/valsent.inp" && echo "\n"
-LD_LIBRARY_PATH=../../../lib ./neptune-valsent1b
+# echo ./neptune-valsent1b
+# LD_LIBRARY_PATH=../../../lib ./neptune-valsent1b
+echo ./neptune-valsent1b-set
+LD_LIBRARY_PATH=../../../lib ./neptune-valsent1b-set
 unlink "input/valsent.inp"
