@@ -1059,9 +1059,9 @@ end subroutine
       t5 = reqt - (0.5d0)*this%covIntegrationStep
       t6 = reqt - (1.d0/3.d0)*this%covIntegrationStep
       t7 = reqt - (5.d0/6.d0)*this%covIntegrationStep
-      t8 = reqt
+      t8 = reqt  ! DLA: is this correct? it is the same as t10. Check RK8 details
       t9 = reqt - (1.d0/6.d0)*this%covIntegrationStep
-      t10 = reqt
+      t10 = reqt  ! DLA: is this correct? it is the same as t8. Check RK8 details
 
       t1d = this%start_epoch%mjd + t1/sec_per_day
       t2d = this%start_epoch%mjd + t2/sec_per_day
@@ -1166,6 +1166,7 @@ end subroutine
       else
         !read(*,*)
         !** find states 2 and 3 through interpolation
+        ! DLA: somehow it seems that state_rk8(5:)%r and %v are all 0!!!
         call this%varstormcow(                             &
                       gravity_model,                       &
                       atmosphere_model,                    &
@@ -1248,6 +1249,8 @@ end subroutine
         if(hasFailed()) return
       end if
 
+      ! t8 is included above, since the time is the last time
+
       if(abs(this%saved_time_offset - t9) < eps8) then
         state_rk8(9) = this%saved_state
       else
@@ -1277,6 +1280,7 @@ end subroutine
         if(hasFailed()) return
       end if
 
+      ! t10 is included above, since the time is the last time
 
       !** evaluate derivative of SET matrix for RK states
       call derivatives_model%deriv_cov(                     &
